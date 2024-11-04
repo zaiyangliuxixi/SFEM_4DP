@@ -61,9 +61,8 @@ function  elastic = mesh3DObject(app)
 end
 
 function [] = initPlot(elastic, app)
-    app_ax = app.UIAxes;
-    cla(app_ax);   % clear app.UIAxes
-    hold(app_ax, 'on');
+    cla(app.UIAxes, 'reset');   % clear app.UIAxes
+    hold(app.UIAxes, 'on');
     npoints = elastic.numNodalPoints;
     init_coor = [];
     for i = 1:npoints
@@ -71,49 +70,74 @@ function [] = initPlot(elastic, app)
     end
     coor_row = size(init_coor,1);
     disps_init = zeros([coor_row,elastic.numNodalPoints]);
-    elastic.draw_init_app(app_ax, disps_init); 
+    elastic.draw_init_app(app.UIAxes, disps_init); 
     sizeScale = app.SizeScale;
 
     overall_max = max(init_coor,[],2);  
     overall_min = min(init_coor,[],2);
     diff_max_min = abs(overall_max - overall_min);
     
-    axis(app_ax, 'equal');     % must be set before the XYZ ticklabel changed 
+    axis(app.UIAxes, 'equal');     % must be set before the XYZ ticklabel changed 
     xlimRangeMin = overall_min(1) - 0.1*diff_max_min(1);
     xlimRangeMax = overall_max(1) + 0.1*diff_max_min(1);
 
     ylimRangeMin = overall_min(2) - 0.1*diff_max_min(2);
     ylimRangeMax = overall_max(2) + 0.1*diff_max_min(2);  
 
-    xlim(app_ax, [ xlimRangeMin, xlimRangeMax]);
-    ylim(app_ax, [ ylimRangeMin, ylimRangeMax]);
-    view(app_ax,2);
+    xlim(app.UIAxes, [ xlimRangeMin, xlimRangeMax]);
+    ylim(app.UIAxes, [ ylimRangeMin, ylimRangeMax]);
+    view(app.UIAxes,2);
     if coor_row ==3
          zlimRangeMin = overall_min(3) - 0.1*diff_max_min(3);
          zlimRangeMax = overall_max(3) + 0.1*diff_max_min(3);  
          zlim(app.UIAxes, [ zlimRangeMin, zlimRangeMax]);
-         view(app_ax,[30,10])
+         view(app.UIAxes,[30,10])
      end
    
     % set tickLabel
+    % xticks = get(app.UIAxes, 'XTick');
+    % yticks = get(app.UIAxes, 'YTick');
+    % zticks = get(app.UIAxes, 'ZTick');
+    % 
+    % %epsilon = 1e-10;
+    % xticklabels = arrayfun(@(x) num2str(x*(1/sizeScale)), xticks, 'UniformOutput', false);
+    % yticklabels = arrayfun(@(y) num2str(y*(1/sizeScale)), yticks, 'UniformOutput', false);
+    % zticklabels = arrayfun(@(z) num2str(z*(1/sizeScale)), zticks, 'UniformOutput', false);
+    % 
+    % % xticklabels(abs(xticks) < epsilon) = {'0'};
+    % % yticklabels(abs(yticks) < epsilon) = {'0'};
+    % % zticklabels(abs(zticks) < epsilon) = {'0'};
+    % 
+    % set(app.UIAxes, 'XTickLabel', xticklabels);
+    % set(app.UIAxes, 'YTickLabel', yticklabels);
+    % set(app.UIAxes, 'ZTickLabel', zticklabels);
+
+
     xticks = get(app.UIAxes, 'XTick');
     yticks = get(app.UIAxes, 'YTick');
     zticks = get(app.UIAxes, 'ZTick');
     
-    epsilon = 1e-10;
+    %epsilon = 1e-10;
     
-    xticklabels = arrayfun(@(x) num2str(x/sizeScale), xticks, 'UniformOutput', false);
-    yticklabels = arrayfun(@(y) num2str(y/sizeScale), yticks, 'UniformOutput', false);
-    zticklabels = arrayfun(@(z) num2str(z/sizeScale), zticks, 'UniformOutput', false);
+    xticklabelsArray = arrayfun(@(x) num2str(x *(1/sizeScale)), xticks, 'UniformOutput', false);
+    yticklabelsArray = arrayfun(@(y) num2str(y *(1/sizeScale)), yticks, 'UniformOutput', false);
+    zticklabelsArray = arrayfun(@(z) num2str(z *(1/sizeScale)), zticks, 'UniformOutput', false);
     
-    xticklabels(abs(xticks) < epsilon) = {'0'};
-    yticklabels(abs(yticks) < epsilon) = {'0'};
-    zticklabels(abs(zticks) < epsilon) = {'0'};
+    % 
+    % xticklabelsArray(abs(xticks) < epsilon) = {'0'};
+    % yticklabelsArray(abs(yticks) < epsilon) = {'0'};
+    % zticklabelsArray(abs(zticks) < epsilon) = {'0'};
+    % 
 
-    set(app.UIAxes, 'XTickLabel', xticklabels);
-    set(app.UIAxes, 'YTickLabel', yticklabels);
-    set(app.UIAxes, 'ZTickLabel', zticklabels);
-  
-     
-    hold(app_ax, 'off'); % Turn off the hold state to avoid affecting subsequent plotting.     
+    xticklabels(app.UIAxes, xticklabelsArray);
+    yticklabels(app.UIAxes, yticklabelsArray);
+    zticklabels(app.UIAxes, zticklabelsArray);
+
+    app.UIAxes.LineWidth = 1.5;
+    xlabel(app.UIAxes,"$x$ [m]",'Interpreter','latex','FontName','Times New Roman','FontSize',20);
+    ylabel(app.UIAxes,"$y$ [m]",'Interpreter','latex','FontName','Times New Roman','FontSize',20);
+    zlabel(app.UIAxes,"$z$ [m]",'Interpreter','latex','FontName','Times New Roman','FontSize',20);
+
+
+    hold(app.UIAxes, 'off'); % Turn off the hold state to avoid affecting subsequent plotting.     
 end
