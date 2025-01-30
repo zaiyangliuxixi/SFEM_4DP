@@ -236,9 +236,10 @@ classdef Triangle
         end
         
         function [obj, M_p] = partial_inertia_matrix(obj)
-            if isempty( obj.Partial_Inertia_Matrix )
-                obj = obj.calculate_partial_inertia_matrix;
-            end
+            %if isempty( obj.Partial_Inertia_Matrix )
+            %    obj = obj.calculate_partial_inertia_matrix;
+            %end
+            obj = obj.calculate_partial_inertia_matrix;
             M_p = obj.Partial_Inertia_Matrix;
         end
         
