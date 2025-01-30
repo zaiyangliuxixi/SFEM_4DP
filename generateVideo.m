@@ -46,8 +46,8 @@ function [] = generateVideo(app)
      xlimRangeMin = overall_min(1) - 0.1*diff_max_min(1);
      xlimRangeMax = overall_max(1) + 0.1*diff_max_min(1);
 
-     ylimRangeMin = overall_min(2) - 0.8*diff_max_min(2);
-     ylimRangeMax = overall_max(2) + 0.8*diff_max_min(2);  
+     ylimRangeMin = overall_min(2) - 0.1*diff_max_min(2);
+     ylimRangeMax = overall_max(2) + 0.1*diff_max_min(2);  
 
      xlim(app.UIAxesVideo, [ xlimRangeMin, xlimRangeMax]);
      ylim(app.UIAxesVideo, [ ylimRangeMin, ylimRangeMax]);
@@ -123,7 +123,8 @@ function [] = generateVideo(app)
         else
            [time_show, timeUnit_show] =updateTimeUnit(real_time, timeUnit);
         end 
-        title(app.UIAxesVideo,['Time: ' num2str(time_show,"%3.2f") timeUnit_show]);     
+        %title(app.UIAxesVideo,['Time: ' num2str(time_show,"%3.2f") timeUnit_show]); 
+        title(app.UIAxesVideo, ['Time: ' num2str(time_show, "%3.2f") timeUnit_show], 'FontSize', 20);  
          try
                 %save current pic
                 if  strlength(app.SelectedFolderPath) ~= 0
